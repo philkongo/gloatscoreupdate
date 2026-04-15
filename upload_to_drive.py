@@ -12,7 +12,7 @@ print("USING OAUTH VERSION")
 SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 
 DRIVE_FOLDER_ID = os.environ["DRIVE_FOLDER_ID"]
-LOCAL_FILE = "espn_season_long_by_team.csv"
+LOCAL_FILE = "espn_season_long_by_team.xlsx"
 print("USING OAUTH VERSION")
 def get_credentials():
     info = json.loads(os.environ["GOOGLE_CREDENTIALS"])
@@ -28,7 +28,7 @@ def upload():
     service = build("drive", "v3", credentials=creds)
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    drive_filename = f"espn_fantasy_{today}.csv"
+    drive_filename = f"gloat_score_bot_{today}.xlsx"
 
     file_metadata = {
         "name": drive_filename,
