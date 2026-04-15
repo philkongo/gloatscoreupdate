@@ -1,0 +1,33 @@
+name: Nightly ESPN Fantasy Update
+
+on:
+  schedule:
+    # Midnight Pacific = 7:00 AM UTC (during PDT)
+    - cron: '0 7 * * *'
+  workflow_dispatch:  # Manual trigger button
+
+jobs:
+  fetch-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run ESPN fantasy script
+        run: python gloat_load_scores.py
+
+      - name: Upload XLSX to Google Drive
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+        run: python upload_to_drive.py
