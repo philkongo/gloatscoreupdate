@@ -11,7 +11,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 
 DRIVE_FOLDER_ID = os.environ["DRIVE_FOLDER_ID"]
 LOCAL_FILE = "espn_season_long_by_team.csv"
-
+print("USING OAUTH VERSION")
 def get_credentials():
     info = json.loads(os.environ["GOOGLE_CREDENTIALS"])
     creds = Credentials.from_authorized_user_info(info, scopes=SCOPES)
