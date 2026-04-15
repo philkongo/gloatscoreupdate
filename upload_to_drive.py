@@ -2,8 +2,8 @@ import json
 import os
 from datetime import datetime, timezone
 
-from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
@@ -13,8 +13,7 @@ DRIVE_FOLDER_ID = os.environ["DRIVE_FOLDER_ID"]
 LOCAL_FILE = "espn_season_long_by_team.csv"
 
 def get_credentials():
-    raw = os.environ["GOOGLE_USER_CREDENTIALS"]
-    info = json.loads(raw)
+    info = json.loads(os.environ["GOOGLE_CREDENTIALS"])
     creds = Credentials.from_authorized_user_info(info, scopes=SCOPES)
 
     if creds.expired and creds.refresh_token:
