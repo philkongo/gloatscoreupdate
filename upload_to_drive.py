@@ -6,7 +6,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
 # ── Configuration ──────────────────────────────────────────────
-DRIVE_FOLDER_ID = os.environ.get("DRIVE_FOLDER_ID", "YOUR_FOLDER_ID_HERE")
+DRIVE_FOLDER_ID = os.environ.get("DRIVE_FOLDER_ID", "1R6HpuOfEd9loWLjBYaSpDKVea_mIHUfq")
 LOCAL_FILE = "espn_season_long_by_team.csv"
 # ───────────────────────────────────────────────────────────────
 
