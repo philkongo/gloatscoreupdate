@@ -1,25 +1,32 @@
 import json
 import os
-from datetime import datetime
-from google.oauth2 import service_account
+from datetime import datetime, timezone
+
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
-# ── Configuration ──────────────────────────────────────────────
-DRIVE_FOLDER_ID = os.environ.get("DRIVE_FOLDER_ID", "1R6HpuOfEd9loWLjBYaSpDKVea_mIHUfq")
+SCOPES = ["https://www.googleapis.com/auth/drive.file"]
+
+DRIVE_FOLDER_ID = os.environ["DRIVE_FOLDER_ID"]
 LOCAL_FILE = "espn_season_long_by_team.csv"
-# ───────────────────────────────────────────────────────────────
+
+def get_credentials():
+    raw = os.environ["GOOGLE_USER_CREDENTIALS"]
+    info = json.loads(raw)
+    creds = Credentials.from_authorized_user_info(info, scopes=SCOPES)
+
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+
+    return creds
 
 def upload():
-    # Load credentials from GitHub secret
-    creds_json = json.loads(os.environ["GOOGLE_CREDENTIALS"])
-    creds = service_account.Credentials.from_service_account_info(
-        creds_json, scopes=["https://www.googleapis.com/auth/drive.file"]
-    )
+    creds = get_credentials()
     service = build("drive", "v3", credentials=creds)
 
-    # Add today's date to the filename so you keep a history
-    today = datetime.utcnow().strftime("%Y-%m-%d")
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     drive_filename = f"espn_fantasy_{today}.csv"
 
     file_metadata = {
@@ -27,16 +34,14 @@ def upload():
         "parents": [DRIVE_FOLDER_ID],
     }
     media = MediaFileUpload(LOCAL_FILE, mimetype="text/csv", resumable=True)
-    
+
     uploaded = service.files().create(
         body=file_metadata,
         media_body=media,
         fields="id, name",
-        supportsAllDrives=True,
     ).execute()
 
     print(f"Uploaded '{uploaded['name']}' (ID: {uploaded['id']})")
-
 
 if __name__ == "__main__":
     upload()
