@@ -1,7 +1,7 @@
 import requests
+import csv
 import time
 from datetime import date, timedelta
-from openpyxl import Workbook
 
 LEAGUE_ID = 167689
 SEASON = 2026
@@ -10,7 +10,7 @@ TOTAL_PERIODS = 187
 BASE_DATE = date(2026, 3, 25)
 DAY_ABBREVS = ['M', 'T', 'W', 'TH', 'F', 'SA', 'SU']
 
-OUTPUT_FILE = 'espn_season_long_by_team.xlsx'
+OUTPUT_FILE = 'espn_season_long_by_team.csv'
 
 
 def period_date(period):
@@ -55,18 +55,18 @@ def team_period_summary(team, period):
         if not (is_pitcher or is_batter):
             continue
 
-        stat_entry = None
+        fpts = 0.0
+        player_gs = 0
         for s in player.get('stats', []):
             if s.get('scoringPeriodId') == period and s.get('statSplitTypeId') == 5:
-                stat_entry = s
-                break
-
-        fpts = float(stat_entry['appliedTotal']) if stat_entry else 0.0
-        raw = stat_entry.get('stats', {}) if stat_entry else {}
+                fpts += float(s.get('appliedTotal', 0))
+                if is_pitcher:
+                    raw = s.get('stats', {})
+                    player_gs += int(float(raw.get('33', raw.get(33, 0))))
 
         if is_pitcher:
             pitcher_fpts += fpts
-            gs += int(float(raw.get('33', raw.get(33, 0))))
+            gs += player_gs
         else:
             batter_fpts += fpts
 
@@ -134,17 +134,13 @@ def main():
 
         time.sleep(0.35)
 
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Season Data"
+    with open(OUTPUT_FILE, 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=fieldnames)
+        w.writeheader()
+        for row in rows:
+            w.writerow(row)
 
-    ws.append(fieldnames)
-
-    for row in rows:
-        ws.append([row.get(col) for col in fieldnames])
-
-    wb.save(OUTPUT_FILE)
-    print(f"\nExcel file saved -> {OUTPUT_FILE}")
+    print(f"\nCSV saved → {OUTPUT_FILE}")
 
 
 if __name__ == '__main__':
