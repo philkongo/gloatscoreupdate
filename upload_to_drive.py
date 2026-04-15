@@ -7,6 +7,8 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
+print("USING OAUTH VERSION")
+
 SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 
 DRIVE_FOLDER_ID = os.environ["DRIVE_FOLDER_ID"]
