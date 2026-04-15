@@ -46,7 +46,7 @@ Runs every night at **midnight Pacific** (7:00 AM UTC). Each run creates a dated
 
 | File                             | Purpose                          |
 |----------------------------------|----------------------------------|
-| `espn_fantasy.py`                | Fetches league data, writes CSV  |
-| `upload_to_drive.py`             | Uploads CSV to Google Drive      |
+| `gloat_load_scores.py`           | Fetches league data, writes XLSX |
+| `upload_to_drive.py`             | Uploads XLSX to Google Drive     |
 | `.github/workflows/nightly.yml`  | GitHub Actions schedule config   |
 | `requirements.txt`               | Python dependencies              |
