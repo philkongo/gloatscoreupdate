@@ -27,9 +27,12 @@ def upload():
         "parents": [DRIVE_FOLDER_ID],
     }
     media = MediaFileUpload(LOCAL_FILE, mimetype="text/csv", resumable=True)
-
+    
     uploaded = service.files().create(
-        body=file_metadata, media_body=media, fields="id, name"
+        body=file_metadata,
+        media_body=media,
+        fields="id, name",
+        supportsAllDrives=True,
     ).execute()
 
     print(f"Uploaded '{uploaded['name']}' (ID: {uploaded['id']})")
