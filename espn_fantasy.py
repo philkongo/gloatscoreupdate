@@ -1,7 +1,7 @@
 import requests
-import csv
 import time
 from datetime import date, timedelta
+from openpyxl import Workbook
 
 LEAGUE_ID = 167689
 SEASON = 2026
@@ -10,7 +10,7 @@ TOTAL_PERIODS = 187
 BASE_DATE = date(2026, 3, 25)
 DAY_ABBREVS = ['M', 'T', 'W', 'TH', 'F', 'SA', 'SU']
 
-OUTPUT_FILE = 'espn_season_long_by_team.csv'
+OUTPUT_FILE = 'espn_season_long_by_team.xlsx'
 
 
 def period_date(period):
@@ -134,13 +134,17 @@ def main():
 
         time.sleep(0.35)
 
-    with open(OUTPUT_FILE, 'w', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=fieldnames)
-        w.writeheader()
-        for row in rows:
-            w.writerow(row)
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Season Data"
 
-    print(f"\nCSV saved → {OUTPUT_FILE}")
+    ws.append(fieldnames)
+
+    for row in rows:
+        ws.append([row.get(col) for col in fieldnames])
+
+    wb.save(OUTPUT_FILE)
+    print(f"\nExcel file saved -> {OUTPUT_FILE}")
 
 
 if __name__ == '__main__':
