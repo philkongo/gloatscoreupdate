@@ -40,7 +40,7 @@ Then go to **Actions** tab → **Nightly ESPN Fantasy Update** → **Run workflo
 
 ## Schedule
 
-Runs every night at **midnight Pacific** (7:00 AM UTC). Each run creates a dated file like `espn_fantasy_2026-04-14.csv` in your Drive folder.
+Runs every night at **midnight Pacific** (7:00 AM UTC). Each run creates a dated file like `espn_fantasy_2026-04-14.xlsx` in your Drive folder.
 
 ## Files
 
