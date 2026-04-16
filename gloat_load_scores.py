@@ -1,7 +1,10 @@
+import json
+import os
 import requests
 import time
 from datetime import date, timedelta
-import openpyxl
+import gspread
+from google.oauth2 import service_account
 
 LEAGUE_ID = 167689
 SEASON = 2026
@@ -10,7 +13,7 @@ TOTAL_PERIODS = 187
 BASE_DATE = date(2026, 3, 25)
 DAY_ABBREVS = ['M', 'T', 'W', 'TH', 'F', 'SA', 'SU']
 
-OUTPUT_FILE = 'espn_season_long_by_team.xlsx'
+SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID", "YOUR_SPREADSHEET_ID_HERE")
 
 
 def period_date(period):
@@ -134,14 +137,17 @@ def main():
 
         time.sleep(0.35)
 
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.append(fieldnames)
-    for row in rows:
-        ws.append([row[f] for f in fieldnames])
-    wb.save(OUTPUT_FILE)
+    creds_json = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+    creds = service_account.Credentials.from_service_account_info(
+        creds_json, scopes=["https://www.googleapis.com/auth/spreadsheets"]
+    )
+    gc = gspread.authorize(creds)
+    sh = gc.open_by_key(SPREADSHEET_ID)
+    ws = sh.sheet1
+    ws.clear()
+    ws.update([fieldnames] + [[row[f] for f in fieldnames] for row in rows])
 
-    print(f"\nXLSX saved → {OUTPUT_FILE}")
+    print(f"\nGoogle Sheet updated → https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}")
 
 
 if __name__ == '__main__':

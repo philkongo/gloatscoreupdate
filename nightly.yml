@@ -24,10 +24,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run ESPN fantasy script
-        run: python gloat_load_scores.py
-
-      - name: Upload XLSX to Google Drive
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
-        run: python upload_to_drive.py
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: python gloat_load_scores.py
