@@ -8,7 +8,7 @@ from google.oauth2 import service_account
 
 LEAGUE_ID = 167689
 SEASON = 2026
-TOTAL_PERIODS = 187
+TOTAL_PERIODS = 23
 
 BASE_DATE = date(2026, 3, 25)
 DAY_ABBREVS = ['M', 'T', 'W', 'TH', 'F', 'SA', 'SU']
