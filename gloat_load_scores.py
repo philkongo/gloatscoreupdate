@@ -95,7 +95,7 @@ def main():
 
     for period in range(1, TOTAL_PERIODS + 1):
         d = period_date(period)
-        date_str = f"{d.month}/{d.day}"
+        date_str = f"{d.month}/{d.day}/{d.year}"
         day_str = day_name(d)
 
         print(f"Period {period:2d} ({date_str} {day_str})...", end=' ', flush=True)
@@ -145,7 +145,8 @@ def main():
     sh = gc.open_by_key(SPREADSHEET_ID)
     ws = sh.sheet1
     ws.clear()
-    ws.update([fieldnames] + [[row[f] for f in fieldnames] for row in rows])
+    ws.update([fieldnames] + [[row[f] for f in fieldnames] for row in rows],
+              value_input_option='USER_ENTERED')
 
     print(f"\nGoogle Sheet updated → https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}")
 
